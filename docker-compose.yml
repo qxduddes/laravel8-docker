@@ -1,0 +1,107 @@
+version: "3.6"
+
+networks:
+  qstrike-network:
+    driver: "bridge"
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: qstrike-app-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src/app-name:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/upload.ini:/usr/local/etc/php/conf.d/upload.ini
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - qstrike-network
+  
+  php:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: qstrike-app-php
+    volumes:
+      - ./src/app-name:/var/www/html
+    ports:
+      - "9001:9000"
+    networks:
+      - qstrike-network
+
+  mysql:
+    image: mysql:8.0.19
+    container_name: qstrike-app-mysql
+    platform: linux/amd64
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "33065:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    command: --max_allowed_packet=32505856
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - qstrike-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    container_name: qstrike-app-phpmyadmin
+    depends_on:
+      - mysql
+    ports:
+      - "9080:80"
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: secret
+      UPLOAD_LIMIT: 10G
+    networks:
+      - qstrike-network
+
+  composer:
+    build:
+      context: .
+      dockerfile: composer.dockerfile
+    container_name: qstrike-app-composer
+    volumes:
+      - ./src/app-name:/var/www/html:delegated
+    depends_on:
+      - php
+    working_dir: /var/www/html
+    user: laravel
+    #entrypoint: ["composer", "--ignore-platform-reqs"]
+    networks:
+      - qstrike-network
+
+  artisan:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: qstrike-app-artisan
+    volumes:
+      - ./src/app-name:/var/www/html:delegated
+    depends_on:
+      - mysql
+    working_dir: /var/www/html
+    user: laravel
+    entrypoint: ["php", "/var/www/html/artisan"]
+    networks:
+      - qstrike-network
+  
+  redis:
+    image: "redis:4.0"
+    ports:
+     - "6382:6379"
+    container_name: qstrike-app-redis
+    networks:
+     - qstrike-network
