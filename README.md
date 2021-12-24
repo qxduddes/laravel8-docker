@@ -2,10 +2,10 @@
 
 1. Install Docker for MacBook Air/Pro M1 (https://docs.docker.com/desktop/mac/apple-silicon) or Windows 10/11 WSL/Hyper-V (https://docs.docker.com/desktop/windows/install)
 2. Clone laravel8-docker to your local computer
-3. Clone and install your app inside /laravel8-docker/src folder
-4. Run docker-compose build (to build your laravel docker development environment)
-5. Run docker-compose up -d (start docker container)
-6. Run docker-compose run composer install
+3. Clone and install your app inside `/laravel8-docker/src` folder
+4. Run `docker-compose build` (to build your laravel docker development environment)
+5. Run `docker-compose up -d` (start docker container)
+6. Run `docker-compose run composer install`
 7. Open the docker-compose.yml and change the database connection credentials
 ```
 MYSQL_DATABASE: app
@@ -21,7 +21,7 @@ DB_DATABASE=app
 DB_USERNAME=root
 DB_PASSWORD=secret
 ```
-10. Run docker-compose run artisan migrate
+10. Run `docker-compose run artisan migrate`
 
 ## Terminal Commands:
 
