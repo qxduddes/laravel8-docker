@@ -21,6 +21,16 @@ DB_DATABASE=app
 DB_USERNAME=root
 DB_PASSWORD=secret
 ```
+
+9. Update your laravel 8 redis queue service in .env file
+```
+QUEUE_CONNECTION=redis
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+REDIS_CLIENT=predis
+```
+
 10. Run `docker-compose run artisan migrate`
 
 ## Terminal Commands:
