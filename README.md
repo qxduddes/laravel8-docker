@@ -3,10 +3,13 @@
 1. Install Docker for MacBook Air/Pro M1 (https://docs.docker.com/desktop/mac/apple-silicon) or Windows 10/11 WSL/Hyper-V (https://docs.docker.com/desktop/windows/install)
 2. Clone laravel8-docker to your local computer
 3. Clone and install your app inside `/laravel8-docker/src` folder
-4. Run `docker-compose build` (to build your laravel docker development environment)
-5. Run `docker-compose up -d` (start docker container)
-6. Run `docker-compose run composer install`
-7. Open the docker-compose.yml and change the database connection credentials
+4. Open the docker-compose.yml and change volume source /src/<name of the repo>:/var/www/html
+   'volumes:
+      - ./src/<repo name>:/var/www/html
+5. Run `docker-compose build` (to build your laravel docker development environment)
+6. Run `docker-compose up -d` (start docker container)
+7. Run `docker-compose run composer install`
+8. Open the docker-compose.yml and change the database connection credentials
 ```
 MYSQL_DATABASE: app
 MYSQL_USER: root
