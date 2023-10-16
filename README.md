@@ -56,5 +56,5 @@ docker-compose run artisan make:controller TestController
 ```
 - To run composer commands
 ```
-docker-compose run composer install
+docker-compose run php composer install
 ```
